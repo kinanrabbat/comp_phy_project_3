@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # alternate model:
 # give shape, rows, function for each shape generates objects in dict where each object has spin and neighbor list
 
@@ -11,7 +12,6 @@ class ising:
 		self.size = size
 		self.shape = shape
 		
-
 		# every atom has key (x, y) and val ist of [spin, neighbor_list]
 		self.atoms = {} 
 		
@@ -32,10 +32,10 @@ class ising:
 	def gen_square(self):
 		for row in range(self.size):
 			for col in range(self.size):
-				spin = self.rng.choice([-1, 1])
-				neighbor_list = (((row - 1) % self.size, col) 
-					 			 ((row - 1) % self.size, col) 
-								 ((row, (col - 1) % self.size)) 
+				spin = int(self.rng.choice([-1, 1]))
+				neighbor_list = (((row - 1) % self.size, col), 
+					 			 ((row + 1) % self.size, col), 
+								 ((row, (col - 1) % self.size)), 
 								 ((row, (col + 1) % self.size)))
 				self.atoms[(row, col)] = [spin, neighbor_list]
 		
@@ -51,13 +51,11 @@ class ising:
 	
 	def calc_energy(self, row_idx, col_idx):
 		energy = 0
-		curr_spin = self.matrix[row_idx][col_idx]
+		curr_spin = self.atoms[(row_idx, col_idx)][0]
 
 		# sum all neighbor spins * current spin
-		energy += curr_spin * self.matrix[(row_idx - 1) % self.size][col_idx]
-		energy += curr_spin * self.matrix[(row_idx + 1) % self.size][col_idx]
-		energy += curr_spin * self.matrix[row_idx][(col_idx - 1) % self.size]
-		energy += curr_spin * self.matrix[row_idx][(col_idx + 1) % self.size]
+		for neighbor in self.atoms[(row_idx, col_idx)][1]:
+			energy += curr_spin * self.atoms[neighbor][0]
 
 		energy *= -self.j
 
@@ -71,28 +69,26 @@ class ising:
 		e_i = self.calc_energy(row_idx, col_idx)
 
 		# flip spin
-		self.matrix[row_idx][col_idx] = -self.matrix[row_idx][col_idx]
+		self.atoms[(row_idx, col_idx)][0] *= -1
 
 		# calc final energy, change in energy
 		e_f = self.calc_energy(row_idx, col_idx)
 		e_change = e_f - e_i
 
-
-		# print("E_change: ", e_change, "        prob: ",  np.exp(-e_change / self.kt))
 		if (e_change < 0) or self.rng.random() < np.exp(-e_change / self.kt):
 			# accept move
 			pass
 		else:
 			# flip back
-			self.matrix[row_idx][col_idx] = -self.matrix[row_idx][col_idx]
+			self.atoms[(row_idx, col_idx)][0] *= -1
 
 		self.past_mag.append(self.magnetization())
 
 	def magnetization(self):
 		output = 0
-		for row in range(self.size):
-			for col in range(self.size):
-				output += self.matrix[row][col]
+
+		for atom in self.atoms.values():
+			output += atom[0]
 		output = float(output) / (self.size ** 2)
 
 		return output
@@ -102,9 +98,10 @@ class ising:
 			self.metro()
 
 
-sim = ising(15, 200)
+sim = ising("square", 15, 200)
 
 print("Initial mag: ", sim.magnetization())
 sim.simulate()
 print("Final mag: ",sim.magnetization())
 sim.plot_mag()
+
