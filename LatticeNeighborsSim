@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-row_length = 10
+row_length = 100
 n = row_length * row_length
 rng = np.random.default_rng()
 
+# Initialize the spin lattice
 arr = rng.choice([-1, 1], size=n)
 print("Initial state:")
 print(arr.reshape(row_length, row_length))
@@ -60,20 +61,20 @@ def total_energy():
     return -0.5 * np.sum(A * np.outer(arr, arr))
 
 def magnetization():
-    return np.sum(arr)
+    # Return the average magnetization per spin (range between -1 and 1)
+    return np.sum(arr) / n
 
 def simulate(steps, T):
     energies = []
     mags = []
     for step in range(steps):
         metropolis_step(T)
-        if step % 10 == 0:
+        if step % 500 == 0:
             energy = total_energy()
             mag = magnetization()
             energies.append(energy)
             mags.append(mag)
             print(f"Step: {step} Energy: {energy} Magnetization: {mag}")
-            print(arr.reshape(row_length, row_length))
     print("Final state:")
     print(arr.reshape(row_length, row_length))
     plt.matshow(arr.reshape(row_length, row_length), cmap='bwr', vmin=-1, vmax=1)
@@ -81,5 +82,6 @@ def simulate(steps, T):
     plt.show()
     return energies, mags
 
-T = 2.0  # Temp
-energies, mags = simulate(100, T)
+T = 2.0  # Temperature
+steps = 100000  # Increase number of steps to allow the system to equilibrate
+energies, mags = simulate(steps, T)
