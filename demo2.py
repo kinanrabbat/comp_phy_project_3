@@ -1,3 +1,4 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,18 +18,43 @@ class ising:
 		
 		if self.shape == "square": 
 			self.gen_square()
+		elif self.shape == "triangle": 
+			self.gen_triangle()
 			
 		self.num_steps = 100000 # num steps
 
 		# constants
 		self.j = 1
-		self.kt = 2
+		self.kt = temp 
 
 		# past magnetization
 		self.past_mag = []
 
 		self.past_mag.append(self.magnetization())
-			
+
+	def valid(self, row, col):
+		return row >= 0 and row < self.size and col >= 0 and col < self.size
+		
+	def gen_triangle(self):
+		for row in range(self.size):
+			for col in range(self.size):
+				spin = int(self.rng.choice([-1, 1]))
+				neighbor_list = []
+				if self.valid(row - 1, col - 1):
+					neighbor_list.append(((row - 1, col - 1)))
+				if self.valid(row - 1, col):
+					neighbor_list.append(((row - 1, col)))
+				if self.valid(row, col + 1):
+					neighbor_list.append(((row, col + 1)))
+				if self.valid(row + 1, col + 1):
+					neighbor_list.append(((row + 1, col + 1)))
+				if self.valid(row + 1, col):
+					neighbor_list.append(((row + 1, col)))
+				if self.valid(row, col - 1):
+					neighbor_list.append(((row, col - 1)))
+
+				self.atoms[(row, col)] = [spin, neighbor_list]
+
 	def gen_square(self):
 		for row in range(self.size):
 			for col in range(self.size):
@@ -91,6 +117,9 @@ class ising:
 			output += atom[0]
 		output = float(output) / (self.size ** 2)
 
+		if(output < 0):
+			output = -1* output
+
 		return output
 	
 	def simulate(self):
@@ -98,10 +127,36 @@ class ising:
 			self.metro()
 
 
-sim = ising("square", 15, 200)
+initial_list = []
+final_list = []
 
-print("Initial mag: ", sim.magnetization())
-sim.simulate()
-print("Final mag: ",sim.magnetization())
-sim.plot_mag()
+for i in range (1, 10):
+	sim = ising("triangle", 12, i)
+	initial_list.append(sim.magnetization())
+	sim.simulate()
+	final_list.append(sim.magnetization())
+	print(i)
+
+
+# Assuming initial_list and final_list are already populated
+temperatures = list(range(1, 10))  # Temperature range from 180 to 299
+
+plt.figure(figsize=(8, 5))
+plt.plot(temperatures, initial_list, label="Initial Magnetization", marker="o")
+plt.plot(temperatures, final_list, label="Final Magnetization", marker="s")
+
+plt.xlabel("Temperature")
+plt.ylabel("Magnetization")
+plt.title("Initial and Final Magnetization vs Temperature")
+plt.legend()
+plt.grid(True)
+
+plt.show()
+
+
+
+# print("Initial mag: ", sim.magnetization())
+# sim.simulate()
+# print("Final mag: ",sim.magnetization())
+# sim.plot_mag()
 
