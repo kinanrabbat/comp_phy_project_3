@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 # give shape, rows, function for each shape generates objects in dict where each object has spin and neighbor list
 
 class ising: 
-	def __init__(self, rows, temp):
+	def __init__(self, rows, temp, num_steps):
 		self.temp = temp
 		self.rng = np.random.default_rng()
 		self.size = rows
-		self.num_steps = 100000 # num steps
+		self.num_steps = num_steps # num steps
 
 		# constants
 		self.j = 1
@@ -82,11 +82,15 @@ class ising:
 		return output
 	
 	def simulate(self):
-		for _ in range(self.num_steps):
+		j = 0
+		for i in range(self.num_steps):
+			if i % 10000 == 0:
+				print(str(j) + "% - step " +  str(i) + ", mag: " + str(self.past_mag[-1]))
+				j += 1
 			self.metro()
 
 
-sim = ising(15, 200)
+sim = ising(50, 10, 1000000)
 
 print("Initial mag: ", sim.magnetization())
 sim.simulate()

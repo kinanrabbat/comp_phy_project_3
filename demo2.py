@@ -1,4 +1,4 @@
-
+import itertools as itt
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -24,7 +24,7 @@ class ising:
 		self.num_steps = 100000 # num steps
 
 		# constants
-		self.j = 1
+		self.j = -1
 		self.kt = temp 
 
 		# past magnetization
@@ -68,6 +68,28 @@ class ising:
 	def plot_mag(self):
 		plt.plot(list(range(0, self.num_steps + 1)), self.past_mag)
 		plt.show()
+
+	def plot_fig(self):
+		if self.shape == "square":
+			arr = np.array([entry[1][0] for entry in list(itt.islice(self.atoms.items(), 0, None))])
+			print(arr)
+			plt.matshow(arr.reshape(self.size, self.size), cmap='bwr', vmin=-1, vmax=1)
+			plt.colorbar()
+			plt.show()
+		elif self.shape == "triangle":
+			x_vals = []
+			y_vals = []
+			colors = []
+			for i in range(self.size):
+				for j in range(self.size):
+					x_vals.append((i % 2) * 0.5 + j)
+					y_vals.append(i)
+					colors.append('red' if self.atoms[(i, j)][0] == 1 else 'blue')
+			plt.xlim(-1, self.size)
+			plt.ylim(-1, self.size)
+			plt.scatter(x_vals, y_vals, c=colors)
+			plt.show()
+			
 		
 	def rand_index(self):
 		row_idx = self.rng.integers(0, self.size)
@@ -136,22 +158,27 @@ for i in range (1, 10):
 	sim.simulate()
 	final_list.append(sim.magnetization())
 	print(i)
+	print("Inital mag: " + str(initial_list[-1]))
+	print("Final mag: " + str(final_list[-1]))
+	sim.plot_fig()
+	break
 
 
-# Assuming initial_list and final_list are already populated
-temperatures = list(range(1, 10))  # Temperature range from 180 to 299
+# # Assuming initial_list and final_list are already populated
+# temperatures = list(range(1, 10))  # Temperature range from 180 to 299
 
-plt.figure(figsize=(8, 5))
-plt.plot(temperatures, initial_list, label="Initial Magnetization", marker="o")
-plt.plot(temperatures, final_list, label="Final Magnetization", marker="s")
+# plt.figure(figsize=(8, 5))
+# plt.plot(temperatures, initial_list, label="Initial Magnetization", marker="o")
+# plt.plot(temperatures, final_list, label="Final Magnetization", marker="s")
 
-plt.xlabel("Temperature")
-plt.ylabel("Magnetization")
-plt.title("Initial and Final Magnetization vs Temperature")
-plt.legend()
-plt.grid(True)
+# plt.xlabel("Temperature")
+# plt.ylabel("Magnetization")
+# plt.ylim(-0.1, 1.1)
+# plt.title("Initial and Final Magnetization vs Temperature")
+# plt.legend()
+# plt.grid(True)
 
-plt.show()
+# plt.show()
 
 
 
