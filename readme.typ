@@ -17,10 +17,10 @@ Hi! Here's a quick readme to describe what the different programs do, as well as
 #figure(caption: "Square Lattice",
   grid(columns: 2, 
     figure(caption: "Ferromagnetic", numbering: none,
-      image("square_reg.png")
+      image("images/square_reg.png")
     ),
     figure(caption: "Antiferromagnetic", numbering: none,
-      image("square_antiferro.png")
+      image("images/square_antiferro.png")
     )
   )
 
@@ -29,10 +29,10 @@ Hi! Here's a quick readme to describe what the different programs do, as well as
 #figure(caption: "Square Lattice",
   grid(columns: 2,
     figure(caption: "Ferromagnetic", numbering: none,
-      image("triangle_reg.png")
+      image("images/triangle_reg.png")
     ),
     figure(caption: "Antiferromagnetic", numbering: none,
-      image("triangle_antiferromagnet.png")
+      image("images/triangle_antiferromagnet.png")
     )  
   )
 )
@@ -41,10 +41,10 @@ Hi! Here's a quick readme to describe what the different programs do, as well as
 #figure(caption: "Square Lattice",
   grid(columns: 2,
     figure(caption: "Ferromagnetic", numbering: none,
-      image("square_ferro.png")
+      image("images/square_ferro.png")
     ),
     figure(caption: "Antiferromagnetic", numbering: none,
-      image("square_anti.png")
+      image("images/square_anti.png")
     )  
   )
 )
@@ -52,10 +52,10 @@ Hi! Here's a quick readme to describe what the different programs do, as well as
 #figure(caption: "Square Lattice",
   grid(columns: 2,
     figure(caption: "Ferromagnetic", numbering: none,
-      image("triangle_ferro.png")
+      image("images/triangle_ferro.png")
     ),
     figure(caption: "Antiferromagnetic", numbering: none,
-      image("triangle_anti.png")
+      image("images/triangle_anti.png")
     )  
   )
 )
