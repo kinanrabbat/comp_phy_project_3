@@ -26,7 +26,7 @@ Hi! Here's a quick readme to describe what the different programs do, as well as
 
 )
 #v(1em)
-#figure(caption: "Square Lattice",
+#figure(caption: "Triangular Lattice",
   grid(columns: 2,
     figure(caption: "Ferromagnetic", numbering: none,
       image("images/triangle_reg.png")
@@ -49,7 +49,7 @@ Hi! Here's a quick readme to describe what the different programs do, as well as
   )
 )
 #v(1em)
-#figure(caption: "Square Lattice",
+#figure(caption: "Triangular Lattice",
   grid(columns: 2,
     figure(caption: "Ferromagnetic", numbering: none,
       image("images/triangle_ferro.png")
